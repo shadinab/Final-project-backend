@@ -8,6 +8,8 @@ const loggerMiddleware = require('./middleware/loggerMiddleware');
 const cookieParser = require('cookie-parser');
 const cors = require('cors'); // Import the cors middleware
 const User = require('./model/User');
+const messageRoutes = require('./routes/Chat');
+
 // MongoDB connection
 
 
@@ -26,7 +28,9 @@ app.get('/', (req, res) => {
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(loggerMiddleware);
+
 app.use(cors());
+
 
 // Routes
 const userRoutes = require('./routes/userRoutes');
@@ -58,5 +62,39 @@ app.get('/avatars', async (req, res) => {
   }
 });
 
+
+
+//socket.io
+
+
+// routes
+app.use('/api', messageRoutes);
+
+
+const http = require('http');
+const socketIO = require('socket.io');
+
+const server = http.createServer(app);
+const io = socketIO(server, {
+  cors: {
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
+
+
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  // Handle chat messages
+  socket.on('message', (data) => {
+    io.emit('message', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
 
 
