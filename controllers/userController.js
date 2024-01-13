@@ -25,31 +25,29 @@ exports.getAllUsers = async (req, res) => {
  */
 exports.getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const userId = await User.findById(req.params.userId);
 
-    if (!user) {
+    if (!userId) {
       return res
         .status(404)
-        .json({ success: false, message: 'User not found' });
+        .json({ success: false, message: 'User not found:lll' });
     }
 
     return res.status(200).json({
       success: true,
-      data: user,
+      data: userId,
     });
   } catch (error) {
     return res.status(500).json({ success: false, error: error.message });
   }
 };
 
-
-
 // // create new user
 
 // exports.createUser = async (req, res) => {
 //   try {
 //     const { name, gender, liveIn, connectionId } = req.body;
-  
+
 //     // Create a new user with the provided connectionId
 //     const newUser = new User({
 //       name,
@@ -73,18 +71,16 @@ exports.getUserById = async (req, res) => {
 
 // create new user
 
-
-
 exports.createUser = async (req, res) => {
   try {
-    const { name, gender, liveIn, connectionId } = req.body;
-  
+    const { name, connectionId, lookingfor, birthday } = req.body;
+
     // Create a new user with the provided connectionId
     const newUser = new User({
       name,
+      birthday,
+      lookingfor,
       connectionId,
-      details: { liveIn }, // Include liveIn from req.body
-      preferences: { gender },
       // ... other properties from req.body
     });
 
@@ -102,13 +98,12 @@ exports.createUser = async (req, res) => {
 
 // exports.createUser = async (req, res) => {
 //   try {
-//     const { name, gender, liveIn } = req.body;
-
-//     const connectionId = req.body.connectionId;
+//     const { name, gender, liveIn, connectionId, birthday } = req.body;
 
 //     // Create a new user with the provided connectionId
 //     const newUser = new User({
 //       name,
+//       birthday,
 //       connectionId,
 //       details: { liveIn }, // Include liveIn from req.body
 //       preferences: { gender },
@@ -153,7 +148,6 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-
 // @desc Get a user by connection id
 // @route GET /api/users/:connectionId
 // @access Public
@@ -175,10 +169,6 @@ exports.getUserByConnectionId = async (req, res) => {
     return res.status(500).json({ success: false, error: error.message });
   }
 };
-
-
-
-
 
 // @desc Update a user by connection id
 // @route PUT /api/users/connectionId

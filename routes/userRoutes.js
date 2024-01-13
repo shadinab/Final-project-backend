@@ -32,7 +32,7 @@ router.get('/users/', userController.getAllUsers);
  * @route GET /users/:id
  * @access Public
  */
-router.get('/users/:id', userController.getUserById);
+router.get('/usersById/:userId', userController.getUserById);
 
 /**
  * @desc Create a new user
